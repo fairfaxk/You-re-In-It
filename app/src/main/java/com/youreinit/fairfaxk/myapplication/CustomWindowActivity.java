@@ -1,6 +1,7 @@
 package com.youreinit.fairfaxk.myapplication;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -73,7 +75,19 @@ public class CustomWindowActivity extends AppCompatActivity {
 
         actionBar.setTitle(placeDetails.name);
 
+        final String lat = Double.toString(placeDetails.geometry.location.lat);
+        final String longitude = Double.toString(placeDetails.geometry.location.lng);
 
+        //Add navigation
+        Button button = findViewById(R.id.navigate);
+        button.setOnClickListener(new Button.OnClickListener(){
+            public void onClick(View v) {
+                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + lat + "," + longitude + "&mode=w");
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
+            }
+        });
         //Get the bathroom details
         RequestQueue queue = Volley.newRequestQueue(this);
         String url ="https://powerful-falls-22457.herokuapp.com/api/bathroom-details/findBathroomByPlaceId/" + place_id;
